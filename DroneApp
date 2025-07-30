@@ -1,0 +1,95 @@
+npx react-native init DroneApp
+cd DroneApp
+npm install react-native-dji-mobile
+<meta-data
+    android:name="com.dji.sdk.API_KEY"
+    android:value="YOUR_DJI_APP_KEY" />
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import DJIMobile from 'react-native-dji-mobile';
+
+const App = () => {
+  const [droneStatus, setDroneStatus] = useState('Disconnected');
+  const [telemetry, setTelemetry] = useState({ battery: 0, altitude: 0 });
+
+  // Initialize DJI SDK
+  useEffect(() => {
+    async function initDJI() {
+      try {
+        await DJIMobile.registerApp();
+        setDroneStatus('Connected');
+        // Start telemetry updates
+        DJIMobile.startTelemetry((data) => {
+          setTelemetry({
+            battery: data.batteryPercentage,
+            altitude: data.altitude,
+          });
+        });
+      } catch (error) {
+        console.error('DJI SDK Error:', error);
+        setDroneStatus('Error');
+      }
+    }
+    initDJI();
+  }, []);
+
+  // Takeoff function
+  const handleTakeoff = async () => {
+    try {
+      await DJIMobile.startTakeoff();
+      setDroneStatus('Taking off...');
+    } catch (error) {
+      console.error('Takeoff Error:', error);
+    }
+  };
+
+  // Land function
+  const handleLand = async () => {
+    try {
+      await DJIMobile.startLanding();
+      setDroneStatus('Landing...');
+    } catch (error) {
+      console.error('Landing Error:', error);
+    }
+  };
+
+  // Waypoint mission (example: fly to two waypoints)
+  const handleWaypointMission = async () => {
+    try {
+      const waypoints = [
+        { latitude: 37.7749, longitude: -122.4194, altitude: 10 },
+        { latitude: 37.7750, longitude: -122.4180, altitude: 10 },
+      ];
+      await DJIMobile.uploadWaypointMission(waypoints);
+      await DJIMobile.startWaypointMission();
+      setDroneStatus('Executing waypoint mission...');
+    } catch (error) {
+      console.error('Waypoint Error:', error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.status}>Drone Status: {droneStatus}</Text>
+      <Text>Battery: {telemetry.battery}%</Text>
+      <Text>Altitude: {telemetry.altitude}m</Text>
+      <Button title="Takeoff" onPress={handleTakeoff} />
+      <Button title="Land" onPress={handleLand} />
+      <Button title="Start Waypoint Mission" onPress={handleWaypointMission} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  status: { fontSize: 18, marginBottom: 20 },
+});
+
+export default App;
+
+app.post('/save-mission', (req, res) => {
+  const { waypoints } = req.body;
+  // Save to database
+  res.json({ status: 'Mission saved' });
+});
