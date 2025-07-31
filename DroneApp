@@ -69,17 +69,6 @@ const App = () => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.status}>Drone Status: {droneStatus}</Text>
-      <Text>Battery: {telemetry.battery}%</Text>
-      <Text>Altitude: {telemetry.altitude}m</Text>
-      <Button title="Takeoff" onPress={handleTakeoff} />
-      <Button title="Land" onPress={handleLand} />
-      <Button title="Start Waypoint Mission" onPress={handleWaypointMission} />
-    </View>
-  );
-};
 
 
 
