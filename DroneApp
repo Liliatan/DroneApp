@@ -72,8 +72,3 @@ const App = () => {
 
 
 
-app.post('/save-mission', (req, res) => {
-  const { waypoints } = req.body;
-  // Save to database
-  res.json({ status: 'Mission saved' });
-});
