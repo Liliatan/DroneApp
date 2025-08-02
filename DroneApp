@@ -57,16 +57,7 @@ const App = () => {
   // Waypoint mission (example: fly to two waypoints)
   const handleWaypointMission = async () => {
     try {
-      const waypoints = [
-        { latitude: 37.7749, longitude: -122.4194, altitude: 10 },
-        { latitude: 37.7750, longitude: -122.4180, altitude: 10 },
-      ];
-      await DJIMobile.uploadWaypointMission(waypoints);
-      await DJIMobile.startWaypointMission();
-      setDroneStatus('Executing waypoint mission...');
-    } catch (error) {
-      console.error('Waypoint Error:', error);
-    }
+      
   };
 
 
