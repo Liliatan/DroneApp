@@ -13,7 +13,7 @@ const App = () => {
   const [droneStatus, setDroneStatus] = useState('Disconnected');
   const [telemetry, setTelemetry] = useState({ battery: 0, altitude: 0 });
 
-  // Initialize DJI SDK
+  // Initialize DJI SDk
   useEffect(() => {
     async function initDJI() {
       try {
